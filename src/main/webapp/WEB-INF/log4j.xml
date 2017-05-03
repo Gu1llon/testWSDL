@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "dtds/log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/" debug="false">
+	
+	<!-- Los errores irán a parar al siguiente archivo:  -->
+	<appender name="error_file" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="portafolioWS_error.log" />
+		<param name="MaxFileSize" value="2000000" />
+		<param name="MaxBackupIndex" value="5" />
+		<param name="Threshold" value="WARN" />
+ 
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%n%d{yyyy-MM-dd HH:mm:ss} [%-5p] [%l] %n%m%n" />
+		</layout>
+	</appender>
+ 
+	<!-- Todas las trazas (debug, warn, error, etc.) irán a parar a este archivo:  -->
+	<appender name="debug_file" class="org.apache.log4j.RollingFileAppender">
+		<param name="File" value="portafolioWS_debug.log" />
+		<param name="MaxFileSize" value="5000000" />
+		<param name="MaxBackupIndex" value="5" />
+ 
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern"
+				value="%n%d{yyyy-MM-dd HH:mm:ss} [%-5p] [%l] %n%m%n" />
+		</layout>
+	</appender>
+ 
+	<!-- Habilitamos sólo los logs de nivel warning o superior para toda la aplicación -->
+	<root>
+		<level value="warn" />
+		<appender-ref ref="error_file" />
+	</root>
+	
+	<!-- Habilitamos todos los LOGS de todas las clases del package com.gmocuevas.portafolio.ws (y subpaquetes):  -->
+	<category name="com.gmocuevas.portafolio.ws">
+		<priority value="debug" />
+		<appender-ref ref="debug_file" />
+	</category>
+</log4j:configuration>

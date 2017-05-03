@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" 
+	targetNamespace="http://www.gmocuevas.com/spring/ws/schemas"
+	xmlns:schemas="http://www.gmocuevas.com/spring/ws/schemas">
+	
+	<xsd:element name="PortafolioInfoRequest">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="categoria" type="xsd:string" />
+				<xsd:element name="nivel"	  type="schemas:nivelType"/>
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:simpleType name="nivelType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="basico" />
+			<xsd:enumeration value="medio" />
+			<xsd:enumeration value="avanzado" />
+		</xsd:restriction>
+	</xsd:simpleType>
+</xsd:schema>

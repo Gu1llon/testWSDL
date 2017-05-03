@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PortafolioInfoRequest  xmlns="http://www.gmocuevas.com/spring/ws/schemas">
+	<categoria>Servicios Web</categoria>
+	<nivel>avanzado</nivel>
+</PortafolioInfoRequest>

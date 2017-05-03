@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd">
+
+	<!-- Realiza la lógica de negocio de consulta de libros en base a la petición -->
+	<bean name="requestProcesor" class="com.gmocuevas.portafolio.ws.DummyRequestProcessor"/>
+ 
+	<!-- EndPoint del WS: Recibirá la petición del WS (WSDL operation)  -->
+	<bean id="PortafolioWSEndpoint" class="com.gmocuevas.portafolio.ws.PortafolioInfoEndPoint">
+    	<property name="procesor" ref="requestProcesor" />
+	</bean>
+ 
+	<!-- Indicamos que hable SOAP 1.2 -->
+    <bean id="messageFactory" class="org.springframework.ws.soap.saaj.SaajSoapMessageFactory">
+        <property name="soapVersion">
+            <util:constant static-field="org.springframework.ws.soap.SoapVersion.SOAP_12"/>
+        </property>
+    </bean>
+ 
+	<!-- 
+		payloadMapping: Redirige mensajes XML entrantes hacia el EndPoint apropiado. Lo haremos en base al elemento raiz del XML, es decir,
+		en función del PayLoad del SOAP:Body del mensaje.
+		(Otra opción podría ser a través de la cabecera SOAPAction: org.springframework.ws.soap.server.endpoint.mapping.SoapActionEndpointMapping)
+	 -->
+	 <bean id="payloadMapping" class="org.springframework.ws.server.endpoint.mapping.PayloadRootQNameEndpointMapping">
+	 	<property name="endpointMap">
+	 		<map>
+	 			<!-- ¡¡ Ojo !! No dejar espacios entre el namespace y el elemento raiz -->
+	 			<entry key="{http://www.adictosaltrabajo.com/spring/ws/schemas}BooksInfoRequest" 
+                value-ref="bibliotecaWSEndpoint"/>
+	 		</map>
+	 	</property>
+	 	
+	 	<!-- Validación de peticiones y/o respuestas -->
+	 	<property name="interceptors">
+	 	   <list>
+	 	       <ref bean="validatingInterceptor"/>
+	 	   </list>
+	 	</property>
+	 </bean>
+	
+	 <!-- Para validar las peticiones y/o respuestas --> 
+	 <bean id="validatingInterceptor" 
+        class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
+	     <property name="schema" value="/WEB-INF/bibliotecaWS.xsd"/>
+	     <property name="validateRequest"  value="true"/>
+	     <property name="validateResponse" value="false"/>
+	 </bean>	
+ 
+	
+	<!-- Este bean convertirá cualquier excepción Java en un fallos SOAP (SOAP Fault)  -->
+	<bean id="endpointExceptionResolver"
+	    class="org.springframework.ws.soap.server.endpoint.SoapFaultMappingExceptionResolver">
+	  <property name="defaultFault"  value="RECEIVER,Server error" />
+	  <property name="exceptionMappings">
+	    <props>
+	      <prop key="org.springframework.oxm.UnmarshallingException">SENDER,Invalid request</prop>
+	      <prop key="org.springframework.oxm.ValidationFailureException">SENDER,Invalid request</prop>
+	    </props>
+	  </property>
+	</bean>
+  	
+	
+	<!--  DynamicWsdl11Definition genera automáticamente el WSDL del servicio Web en base al XSD que define los mensajes -->
+	<bean id="bibliotecaWS" class="org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition">
+	  <property name="schema">
+	    <bean class="org.springframework.xml.xsd.SimpleXsdSchema">
+	      <property name="xsd" value="/WEB-INF/bibliotecaWS.xsd"/>
+	    </bean>
+	  </property>
+	  
+	  <property name="createSoap12Binding" value="true"/>
+	  <property name="portTypeName" value="bibliotecaWS"/>
+	  <property name="locationUri"  value="http://localhost:8080/portafolioWS/services"/>
+	</bean>
+</beans>

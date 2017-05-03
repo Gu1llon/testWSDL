@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PortafolioInfoResponse xmlns="http://www.gmocuevas.com/spring/ws/schemas">
+	<libro>
+		<editorial>Editorial Guay</editorial>
+		<titulo>Java en ejemplos</titulo>
+		<paginas>520</paginas>
+		<precio>40</precio>
+	</libro>
+	<libro>
+		<editorial>Editorial XYZ</editorial>
+		<titulo>Aprenda Java en 50 dias</titulo>
+		<paginas>700</paginas>
+		<precio>80</precio>
+	</libro>
+</PortafolioInfoResponse>
