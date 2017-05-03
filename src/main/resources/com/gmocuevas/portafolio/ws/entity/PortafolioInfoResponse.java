@@ -1,5 +1,8 @@
 package com.gmocuevas.portafolio.ws.entity;
-
+/**
+ * @author gcuevasf
+ *
+ */
 public class PortafolioInfoResponse {
 		private java.util.ArrayList<Libro> libros;
 		
